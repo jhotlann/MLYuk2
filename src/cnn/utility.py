@@ -8,7 +8,7 @@ from keras.applications.resnet50 import preprocess_input
 import os
 import hashlib
 
-def image_loader(path, h, w):
+def image_loader(path, h=224, w=224):
     im = Image.open(path)
 
     if h != None and w != None:
@@ -19,7 +19,7 @@ def image_loader(path, h, w):
 
     return norm_im
 
-def batch_loader(paths, w, h, c=1):
+def batch_loader(paths, h=224, w=224, c=3):
     batch_array = np.zeros((len(paths), h, w, c), dtype=np.float32)
     
     for idx, path in enumerate(paths):
