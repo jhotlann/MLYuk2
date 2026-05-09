@@ -24,7 +24,8 @@ class Conv2D(nn.Module):
     def forward(self, x):
         '''
         x shape: [N, h, w, c]
-        y shape: 
+        k shape: [kH, kW, C_in, C_out]
+        y shape: [N, h, w, c]
         '''
         kH, kW, C_in, C_out = self.kernel.shape
         B, H, W, C_x = x.shape
@@ -51,3 +52,40 @@ class Conv2D(nn.Module):
 
         return y
 
+class LocallyConnected2D(nn.Module):
+    def __init__(self, kernel, bias, kH, kW):
+        super().__init__()
+        self.kernel = kernel
+        self.bias = bias
+        self.kH = kH
+        self.kW = kW
+        self.activation = nn.ReLU()
+
+    def forward(self, x):
+        '''
+        x shape: [N, h, w, c]
+        k shape: [output_rows*output_cols, kH*kW*C_in, C_out]
+        y shape: 
+        '''
+        B, H, W, C_in = x.shape
+        num_positions, kernel_size, C_out = self.kernel.shape
+
+        H_out = H - self.kH + 1
+        W_out = W - self.kW + 1
+
+        y = torch.zeros((B, H_out, W_out, C_out), device=x.device)
+        for b in range(B):
+            pos = 0
+            for i in range(H_out):
+                for j in range(W_out):
+                    patch = x[b, i:i+self.kH, j:j+self.kW, :]
+                    patch = patch.reshape(-1)
+
+                    for out_c in range(C_out):
+                        k = self.kernel[pos, :, out_c]
+                        y[b, i, j, out_c] = (
+                            patch * k
+                        ).sum() + self.bias[pos, out_c]
+                    pos += 1
+
+        return self.activation(y)
