@@ -13,12 +13,8 @@ class LocallyConnected2D(nn.Module):
         '''
         super().__init__()
         weights = keras_layer.get_weights()
-        # Keras shape: [output_rows, output_cols, input_size, C_out]
-        # reshape to: [output_rows*output_cols, input_size, C_out]
-        w = weights[0]
-        rows, cols, input_size, C_out = w.shape
-        self.kernel = w.reshape(rows * cols, input_size, C_out)
-        self.bias = weights[1].reshape(rows * cols, C_out)
+        self.kernel = weights[0]
+        self.bias = weights[1]
         self.kH, self.kW = keras_layer.kernel_size
 
         act_name = keras_layer.activation.__name__
@@ -39,14 +35,8 @@ class LocallyConnected2D(nn.Module):
             pos = 0
             for i in range(H_out):
                 for j in range(W_out):
-                    patch = x[b, i:i+self.kH, j:j+self.kW, :]
-                    patch = patch.reshape(-1)
-
-                    for out_c in range(C_out):
-                        k = self.kernel[pos, :, out_c]
-                        y[b, i, j, out_c] = (
-                            patch * k
-                        ).sum() + self.bias[pos, out_c]
+                    patch = x[b, i:i+self.kH, j:j+self.kW, :].reshape(-1)
+                    y[b, i, j, :] = patch @ self.kernel[pos] + self.bias[pos]
                     pos += 1
 
         return self.activation(y)
