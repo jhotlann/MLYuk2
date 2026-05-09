@@ -1,14 +1,8 @@
 from torch import nn
 import torch
+from .activation import get_activation
 
 class Conv2D(nn.Module):
-    ACTIVATION_MAP = {
-        "relu": nn.ReLU(),
-        "sigmoid": nn.Sigmoid(),
-        "tanh": nn.Tanh(),
-        "linear": nn.Identity(),
-        "softmax": nn.Softmax(dim=-1),
-    }
 
     def __init__(self, keras_layer):
         '''
@@ -19,8 +13,7 @@ class Conv2D(nn.Module):
         self.kernel = weights[0]
         self.bias = weights[1]
 
-        act_name = keras_layer.activation.__name__
-        self.activation = self.ACTIVATION_MAP.get(act_name, nn.Identity())
+        self.activation = get_activation(keras_layer)
 
         self.stride = keras_layer.strides
         self.padding = keras_layer.padding

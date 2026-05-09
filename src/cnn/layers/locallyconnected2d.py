@@ -1,11 +1,8 @@
+from torch import nn
+import torch
+from .activation import get_activation
+
 class LocallyConnected2D(nn.Module):
-    ACTIVATION_MAP = {
-        "relu": nn.ReLU(),
-        "sigmoid": nn.Sigmoid(),
-        "tanh": nn.Tanh(),
-        "linear": nn.Identity(),
-        "softmax": nn.Softmax(dim=-1),
-    }
 
     def __init__(self, keras_layer):
         '''
@@ -17,8 +14,7 @@ class LocallyConnected2D(nn.Module):
         self.bias = weights[1]
         self.kH, self.kW = keras_layer.kernel_size
 
-        act_name = keras_layer.activation.__name__
-        self.activation = self.ACTIVATION_MAP.get(act_name, nn.Identity())
+        self.activation = get_activation(keras_layer)
 
     def forward(self, x):
         '''
