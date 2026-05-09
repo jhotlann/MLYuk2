@@ -29,8 +29,8 @@ class Conv2D(nn.Module):
 
     def forward(self, x):
         '''
-        x shape: [N, H, W, C_in]
-        y shape: [N, H_out, W_out, C_out]
+        x shape: [B, H, W, C_in]
+        y shape: [B, H_out, W_out, C_out]
         '''
         kH, kW, C_in, C_out = self.kernel.shape
         B, H, W, C_x = x.shape
