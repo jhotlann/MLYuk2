@@ -54,3 +54,26 @@ class AveragePooling2D(nn.Module):
                 y[:, i, j, :] = patch.mean(dim=(1, 2))
 
         return y
+
+class GlobalAveragePooling2D(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        '''
+        x shape: [N, H, W, C]
+        y shape: [N, C]
+        '''
+        return x.mean(dim=(1, 2))
+
+
+class GlobalMaxPooling2D(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        '''
+        x shape: [N, H, W, C]
+        y shape: [N, C]
+        '''
+        return x.amax(dim=(1, 2))
