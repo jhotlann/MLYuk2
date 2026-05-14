@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Dataset & Kaggle
+data/
+dataset/
+*.zip
+*.tar.gz
+*.h5
+*.pkl
+*.csv
+kaggle.json
+.kaggle/
