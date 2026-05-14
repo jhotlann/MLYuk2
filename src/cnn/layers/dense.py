@@ -1,14 +1,12 @@
-from torch import nn
-import torch
+import numpy as np
 from .activation import get_activation
 
-class Dense(nn.Module):
+class Dense:
     def __init__(self, keras_layer):
         '''
         weight shape: [input_dim, units]
         bias shape:   [units]
         '''
-        super().__init__()
         weights = keras_layer.get_weights()
         self.weight = weights[0]
         self.bias = weights[1]

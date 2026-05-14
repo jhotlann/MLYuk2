@@ -1,14 +1,12 @@
-from torch import nn
-import torch
+import numpy as np
 from .activation import get_activation
 
-class Conv2D(nn.Module):
+class Conv2D:
 
     def __init__(self, keras_layer):
         '''
         k shape: [kH, kW, C_in, C_out]
         '''
-        super().__init__()
         weights = keras_layer.get_weights()
         self.kernel = weights[0]
         self.bias = weights[1]
@@ -41,16 +39,17 @@ class Conv2D(nn.Module):
             pad_top, pad_bottom = pad_h // 2, pad_h - pad_h // 2
             pad_left, pad_right = pad_w // 2, pad_w - pad_w // 2
 
-            x = torch.nn.functional.pad(x.permute(0, 3, 1, 2), (pad_left, pad_right, pad_top, pad_bottom)).permute(0, 2, 3, 1)
+            # NumPy padding
+            x = np.pad(x, ((0, 0), (pad_top, pad_bottom), (pad_left, pad_right), (0, 0)), mode='constant')
             H, W = x.shape[1], x.shape[2]
 
         h_out = (H - kH) // sH + 1
         w_out = (W - kW) // sW + 1
 
-        y = torch.zeros((B, h_out, w_out, C_out), device=x.device)
+        y = np.zeros((B, h_out, w_out, C_out), dtype=np.float32)
         for b in range(B):
             for out_c in range(C_out):
-                y_in = torch.zeros((h_out, w_out), device=x.device)
+                y_in = np.zeros((h_out, w_out), dtype=np.float32)
                 for in_c in range(C_in):
                     x_in = x[b, :, :, in_c]
                     k_in = self.kernel[:, :, in_c, out_c]

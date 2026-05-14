@@ -1,8 +1,8 @@
-from torch import nn
+import numpy as np
 
-class Flatten(nn.Module):
-    def __init__(self):
-        super().__init__()
+class Flatten:
+    def __init__(self, keras_layer=None):
+        pass
 
     def forward(self, x):
         '''

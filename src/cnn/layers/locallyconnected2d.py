@@ -1,14 +1,12 @@
-from torch import nn
-import torch
+import numpy as np
 from .activation import get_activation
 
-class LocallyConnected2D(nn.Module):
+class LocallyConnected2D:
 
     def __init__(self, keras_layer):
         '''
         k shape: [output_rows*output_cols, kH*kW*C_in, C_out]
         '''
-        super().__init__()
         weights = keras_layer.get_weights()
         self.kernel = weights[0]
         self.bias = weights[1]
@@ -26,7 +24,7 @@ class LocallyConnected2D(nn.Module):
         H_out = H - self.kH + 1
         W_out = W - self.kW + 1
 
-        y = torch.zeros((B, H_out, W_out, C_out), device=x.device)
+        y = np.zeros((B, H_out, W_out, C_out), dtype=np.float32)
         for b in range(B):
             pos = 0
             for i in range(H_out):
