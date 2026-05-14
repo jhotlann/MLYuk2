@@ -1,10 +1,8 @@
-from torch import nn
-import torch
+import numpy as np
 
 
-class MaxPooling2D(nn.Module):
+class MaxPooling2D:
     def __init__(self, keras_layer):
-        super().__init__()
         self.pool_size = keras_layer.pool_size
         self.stride = keras_layer.strides
 
@@ -20,18 +18,17 @@ class MaxPooling2D(nn.Module):
         H_out = (H - pH) // sH + 1
         W_out = (W - pW) // sW + 1
 
-        y = torch.zeros((B, H_out, W_out, C), device=x.device)
+        y = np.zeros((B, H_out, W_out, C), dtype=np.float32)
         for i in range(H_out):
             for j in range(W_out):
                 patch = x[:, i*sH:i*sH+pH, j*sW:j*sW+pW, :]  # [B, pH, pW, C]
-                y[:, i, j, :] = patch.amax(dim=(1, 2))
+                y[:, i, j, :] = patch.max(axis=(1, 2))
 
         return y
 
 
-class AveragePooling2D(nn.Module):
+class AveragePooling2D:
     def __init__(self, keras_layer):
-        super().__init__()
         self.pool_size = keras_layer.pool_size
         self.stride = keras_layer.strides
 
@@ -47,33 +44,33 @@ class AveragePooling2D(nn.Module):
         H_out = (H - pH) // sH + 1
         W_out = (W - pW) // sW + 1
 
-        y = torch.zeros((B, H_out, W_out, C), device=x.device)
+        y = np.zeros((B, H_out, W_out, C), dtype=np.float32)
         for i in range(H_out):
             for j in range(W_out):
                 patch = x[:, i*sH:i*sH+pH, j*sW:j*sW+pW, :]
-                y[:, i, j, :] = patch.mean(dim=(1, 2))
+                y[:, i, j, :] = patch.mean(axis=(1, 2))
 
         return y
 
-class GlobalAveragePooling2D(nn.Module):
-    def __init__(self):
-        super().__init__()
+class GlobalAveragePooling2D:
+    def __init__(self, keras_layer=None):
+        pass
 
     def forward(self, x):
         '''
         x shape: [N, H, W, C]
         y shape: [N, C]
         '''
-        return x.mean(dim=(1, 2))
+        return x.mean(axis=(1, 2))
 
 
-class GlobalMaxPooling2D(nn.Module):
-    def __init__(self):
-        super().__init__()
+class GlobalMaxPooling2D:
+    def __init__(self, keras_layer=None):
+        pass
 
     def forward(self, x):
         '''
         x shape: [N, H, W, C]
         y shape: [N, C]
         '''
-        return x.amax(dim=(1, 2))
+        return x.max(axis=(1, 2))

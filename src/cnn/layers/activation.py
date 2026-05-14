@@ -1,40 +1,37 @@
-from torch import nn
-import torch
+import numpy as np
 
-class ReLU(nn.Module):
-    def forward(self, x):
-        return x.clamp(min=0)
+class ReLU:
+    def __call__(self, x):
+        return np.maximum(0, x)
 
-class Sigmoid(nn.Module):
-    def forward(self, x):
-        return 1 / (1 + torch.exp(-x))
+class Sigmoid:
+    def __call__(self, x):
+        return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
 
-class Tanh(nn.Module):
-    def forward(self, x):
-        return (torch.exp(x) - torch.exp(-x)) / (torch.exp(x) + torch.exp(-x))
+class Tanh:
+    def __call__(self, x):
+        return np.tanh(x)
 
-class Softmax(nn.Module):
+class Softmax:
     def __init__(self, axis=-1):
-        super().__init__()
         self.axis = axis
 
-    def forward(self, x):
-        x_shifted = x - x.amax(dim=self.axis, keepdim=True)
-        exp_x = torch.exp(x_shifted)
-        return exp_x / exp_x.sum(dim=self.axis, keepdim=True)
+    def __call__(self, x):
+        x_shifted = x - np.max(x, axis=self.axis, keepdims=True)
+        exp_x = np.exp(x_shifted)
+        return exp_x / np.sum(exp_x, axis=self.axis, keepdims=True)
 
-class Linear(nn.Module):
-    def forward(self, x):
+class Linear:
+    def __call__(self, x):
         return x
 
-class LeakyReLU(nn.Module):
+class LeakyReLU:
     def __init__(self, alpha=0.3):
         """alpha: negative slope, matches Keras default (0.3)."""
-        super().__init__()
         self.alpha = alpha
 
-    def forward(self, x):
-        return torch.where(x >= 0, x, self.alpha * x)
+    def __call__(self, x):
+        return np.where(x >= 0, x, self.alpha * x)
 
 ACTIVATION_MAP = {
     "relu":         ReLU,
