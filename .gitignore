@@ -222,8 +222,6 @@ data/
 dataset/
 *.zip
 *.tar.gz
-*.h5
 *.pkl
-*.csv
 kaggle.json
 .kaggle/
