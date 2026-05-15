@@ -51,12 +51,14 @@ class CaptioningModelScratch:
         out_key = self._find_layer(layer_map, "dense_out", "dense_1", "dense")
         self.dense_out = DenseLayer(layer_map[out_key])
 
-    def _find_layer(self, layer_map, *candidates):
+    def _find_layer(self, layer_map, *candidates, exclude_suffix=None):
         for c in candidates:
             if c in layer_map:
                 return c
         # fallback: search by partial match of first candidate
         for name in layer_map:
+            if exclude_suffix and name.endswith(exclude_suffix):
+                continue
             if candidates[0].split("_")[0] in name:
                 return name
         raise KeyError(f"Could not find layer matching any of {candidates} in {list(layer_map)}")
