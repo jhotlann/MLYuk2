@@ -2,15 +2,16 @@ import numpy as np
 
 
 def _pool_windows(x, pool_size, stride):
-    """
-    output shape: [B, H_out, W_out, pH, pW, C]
-    """
     B, H, W, C = x.shape
     pH, pW = pool_size
     sH, sW = stride
 
     H_out = (H - pH) // sH + 1
     W_out = (W - pW) // sW + 1
+
+    if sH == pH and sW == pW:
+        x_crop = x[:, :H_out*sH, :W_out*sW, :]
+        return x_crop.reshape(B, H_out, pH, W_out, pW, C)
 
     windows = np.lib.stride_tricks.as_strided(
         x,
@@ -24,7 +25,7 @@ def _pool_windows(x, pool_size, stride):
             x.strides[3],
         )
     )
-    return windows
+    return np.ascontiguousarray(windows)
 
 
 class MaxPooling2D:
@@ -34,7 +35,8 @@ class MaxPooling2D:
 
     def forward(self, x):
         windows = _pool_windows(x, self.pool_size, self.stride)
-        return windows.max(axis=(3, 4))
+        ax = (2, 4) if self.stride == self.pool_size else (3, 4)
+        return windows.max(axis=ax)
 
 
 class AveragePooling2D:
@@ -44,7 +46,8 @@ class AveragePooling2D:
 
     def forward(self, x):
         windows = _pool_windows(x, self.pool_size, self.stride)
-        return windows.mean(axis=(3, 4))
+        ax = (2, 4) if self.stride == self.pool_size else (3, 4)
+        return windows.mean(axis=ax)
 
 class GlobalAveragePooling2D:
     def __init__(self, keras_layer=None):
