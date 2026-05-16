@@ -217,4 +217,11 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-data/flickr8k
+# Dataset & Kaggle
+data/
+dataset/
+*.zip
+*.tar.gz
+*.pkl
+kaggle.json
+.kaggle/
