@@ -30,8 +30,8 @@ Melalui Notebook:
 - rnn_pipeline.ipynb: pipeline end-to-end (image -> CNN feature -> scratch decoder).
 
 ## Pembagian Tugas
-| Nama | NIM | Tugas |
-| --- | --- | --- |
-| Anggota 1 | NIM1 | Placeholder tugas |
-| Anggota 2 | NIM2 | Placeholder tugas |
-| Anggota 3 | NIM3 | Placeholder tugas |
+| Nama                      | NIM      | Tugas                                                                                 |
+| --------------------------| ---------| ------------------------------------------------------------------------------------- |
+| Joel Hotlan Haris Siahaan | 13523025 | CNN: utility, forward propagation, pelatihan model, analisis dan evaluasi, laporan    |
+| Julius Arthur             | 13523030 | Encoder, feature extraction untuk RNN/LSTM, Encoder Decoder pipeline, laporan         |
+| Salman Hanif              | 13523056 | RNN/LSTM: forward, preprocessing, pelatihan decoder, analisis RNN vs LSTM, laporan    |
