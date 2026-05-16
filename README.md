@@ -25,9 +25,9 @@ Melalui Notebook:
 - cnn_training.ipynb: training 16 variase encoder CNN
 - cnn_evaluation.ipynb: evaluasi dan analisis perbandingan Keras vs Scratch, shared vs non-shared
 - cnn_hyperparameter.ipynb: analisis pengaruh hyperparameter
-- rnn_training.ipynb: training 12 variasi decoder RNN/LSTM pada Flickr8k.
-- rnn_evaluation.ipynb: evaluasi BLEU-4 + METEOR, perbandingan Keras vs Scratch.
-- rnn_pipeline.ipynb: pipeline end-to-end (image -> CNN feature -> scratch decoder).
+- rnn_training.ipynb: training 12 variasi decoder RNN/LSTM pada Flickr8k
+- rnn_evaluation.ipynb: evaluasi BLEU-4 + METEOR, perbandingan Keras vs Scratch
+- rnn_pipeline.ipynb: pipeline end-to-end (image -> CNN feature -> scratch decoder)
 
 ## Pembagian Tugas
 | Nama                      | NIM      | Tugas                                                                                 |
